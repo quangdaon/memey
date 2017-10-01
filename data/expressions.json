@@ -1,0 +1,86 @@
+[
+    {
+        "regex": "(one does not simply) (.*)",
+        "id": 61579
+    },
+    {
+        "regex": "(i don'?t always .*) (but when i do,? .*)",
+        "id": 61532
+    },
+    {
+        "regex": "aliens ()(.*)",
+        "id": 101470
+    },
+    {
+        "regex": "grumpy cat ()(.*)",
+        "id": 405658
+    },
+    {
+        "regex": "(.*),? (\\1 everywhere)",
+        "id": 347390
+    },
+    {
+        "regex": "(not sure if .*) (or .*)",
+        "id": 61520
+    },
+    {
+        "regex": "(y u no) (.+)",
+        "id": 61527
+    },
+    {
+        "regex": "(brace yoursel[^\\s]+) (.*)",
+        "id": 61546
+    },
+    {
+        "regex": "(.*) (all the .*)",
+        "id": 61533
+    },
+    {
+        "regex": "(.*) (that would be great|that'?d be great)",
+        "id": 563423
+    },
+    {
+        "regex": "(.*) (\\w+\\stoo damn .*)",
+        "id": 61580
+    },
+    {
+        "regex": "(yo dawg .*) (so .*)",
+        "id": 101716
+    },
+    {
+        "regex": "(.*) (.* gonna have a bad time)",
+        "id": 100951
+    },
+    {
+        "regex": "(am i the only one around here) (.*)",
+        "id": 259680
+    },
+    {
+        "regex": "(what if i told you) (.*)",
+        "id": 100947
+    },
+    {
+        "regex": "(.*) (ain'?t nobody got time for? that)",
+        "id": 442575
+    },
+    {
+        "regex": "(.*) (i guarantee it)",
+        "id": 10672255
+    },
+    {
+        "regex": "(.*) (a+n+d+ it'?s gone)",
+        "id": 766986
+    },
+    {
+        "regex": "(.* bats an eye) (.* loses their minds?)",
+        "id": 1790995
+    },
+    {
+        "regex": "(back in my day) (.*)",
+        "id": 718432
+    },
+    {
+        "regex": "(.*) (if i had \\w+)",
+        "id": 3218037
+    }
+]
