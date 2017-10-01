@@ -38,12 +38,14 @@ default:
 function parseInput() {
 	if (!config.IMGFLIP_USERNAME) return console.log('You need to log in first. Run "meme login" and provide your memeflip credentials.');
 	let inputValid = false;
+
 	for (let a in args) {
-		if(a !== '$0' && args[a].length) {
+		if (args.hasOwnProperty(a) && a !== '$0' && args[a].length) {
 			inputValid = true;
 			break;
 		}
 	}
+	
 	if (!inputValid) return console.log('An input is required.');
 
 	if (query) {
@@ -141,11 +143,11 @@ function login() {
 		name: 'password',
 		hidden: true
 	}], function (err, results) {
-		console.log(results);
 		const data = {
 			IMGFLIP_USERNAME: results.username,
 			IMGFLIP_PASSWORD: results.password
 		};
+
 		fs.writeFileSync(path.join(__dirname, './data/config.json'), JSON.stringify(data, null, 4), 'UTF-8');
 	});
 }
