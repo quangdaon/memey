@@ -122,7 +122,7 @@ async function update() {
 		}
 	});
 
-	fs.writeFileSync('./data/memes.json', JSON.stringify(savedMemes.sort((a, b) => a.id - b.id), null, 4), 'UTF-8');
+	fs.writeFileSync(path.join(__dirname, './data/memes.json'), JSON.stringify(savedMemes.sort((a, b) => a.id - b.id), null, 4), 'UTF-8');
 	return added;
 }
 
