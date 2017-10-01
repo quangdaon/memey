@@ -55,3 +55,9 @@ In order to reduce the strain on ImgFlip's servers, all meme data is stored loca
 ## Disclaimer
 
 This application is not associated with ImgFlip or any of their affiliates. Should it be found that this application violates any terms or conditions of ImgFlip, please contact me and I will take it down.
+
+```
+meme -s "bad luck brian" -t "builds a cli app for imgflip" -b "gets banned"
+```
+
+![](http://i.imgflip.com/1wv5t1.jpg)

@@ -8,6 +8,7 @@ const prompt = require('prompt');
 
 const savedMemes = require('./data/memes.json');
 const expressions = require('./data/expressions.json');
+const path = require('path');
 let config;
 
 try {
@@ -145,6 +146,6 @@ function login() {
 			IMGFLIP_USERNAME: results.username,
 			IMGFLIP_PASSWORD: results.password
 		};
-		fs.writeFileSync('./data/config.json', JSON.stringify(data, null, 4), 'UTF-8');
+		fs.writeFileSync(path.join(__dirname, './data/config.json'), JSON.stringify(data, null, 4), 'UTF-8');
 	});
 }
