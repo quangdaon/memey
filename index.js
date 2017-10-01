@@ -1,14 +1,36 @@
 #!/usr/bin/env node
 const { copy } = require('copy-paste');
 const request = require('request-promise-native');
-const args = require('yargs').argv;
 const fs = require('fs');
 const opn = require('opn');
 const prompt = require('prompt');
 
+const args = require('yargs')
+	.usage('Usage: $0 [<command>] [options]')
+	.command('create', 'Default command; creates a meme.', () => null, parseInput)
+	.command('update', 'Updates meme list', () => null, () => update().then(res => console.log(res ? 'Updated!' : 'Already up-to-date.')))
+	.command('login', 'Login to ImgFlip', () => null, login)
+	.command('stats', 'Should meme stats', () => null, getStats)
+	.alias('s', 'search')
+	.nargs('s', 1)
+	.describe('s', 'Selects a meme')
+	.alias('t', 'top')
+	.nargs('t', 1)
+	.describe('t', 'Input top text')
+	.alias('b', 'bottom')
+	.nargs('b', 1)
+	.describe('b', 'Input bottom text')
+	.help('h')
+	.alias('h', 'help')
+	.alias('v', 'version')
+	.example('$0 create "y no no work"', 'Creates y u no meme')
+	.epilog('Created by Quangdao Nguyen')
+	.argv;
+
 const savedMemes = require('./data/memes.json');
 const expressions = require('./data/expressions.json');
 const path = require('path');
+const npmPkg = require('./package.json');
 let config;
 
 try {
@@ -19,20 +41,12 @@ try {
 
 const { s: query, t: top, b: bottom } = args;
 
-const command = args._[0];
-
-switch (command) {
-case 'update':
-	update().then(res => console.log(res ? 'Updated!' : 'Already up-to-date.'));
-	break;
-case 'login':
-	login();
-	break;
-case 'stats':
-	getStats();
-	break;
-default:
-	parseInput();
+if (!args._[0]) {
+	if (args.v) {
+		showVersion();
+	} else {
+		parseInput();
+	}
 }
 
 function parseInput() {
@@ -45,7 +59,7 @@ function parseInput() {
 			break;
 		}
 	}
-	
+
 	if (!inputValid) return console.log('An input is required.');
 
 	if (query) {
@@ -131,6 +145,10 @@ async function update() {
 function getStats() {
 	console.log('Saved Memes:', savedMemes.length);
 	console.log('Known Expressions:', expressions.length);
+}
+
+function showVersion() {
+	console.log(`Memey Version ${npmPkg.version}`)
 }
 
 function login() {
