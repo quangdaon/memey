@@ -7,10 +7,10 @@ const prompt = require('prompt');
 
 const args = require('yargs')
 	.usage('Usage: $0 [<command>] [options]')
-	.command('create', 'Default command; creates a meme.', () => null, parseInput)
+	.command('create', '(Optional/default) creates a meme.', () => null, parseInput)
 	.command('update', 'Updates meme list', () => null, () => update().then(res => console.log(res ? 'Updated!' : 'Already up-to-date.')))
 	.command('login', 'Login to ImgFlip', () => null, login)
-	.command('stats', 'Should meme stats', () => null, getStats)
+	.command('stats', 'Show meme stats', () => null, getStats)
 	.alias('s', 'search')
 	.nargs('s', 1)
 	.describe('s', 'Selects a meme')
@@ -23,7 +23,8 @@ const args = require('yargs')
 	.help('h')
 	.alias('h', 'help')
 	.alias('v', 'version')
-	.example('$0 create "y no no work"', 'Creates y u no meme')
+	.describe('s', 'Show version number')
+	.example('$0 "y no no work"', 'Creates y u no meme')
 	.epilog('Created by Quangdao Nguyen')
 	.argv;
 
@@ -54,7 +55,7 @@ function parseInput() {
 	let inputValid = false;
 
 	for (let a in args) {
-		if (args.hasOwnProperty(a) && a !== '$0' && args[a].length) {
+		if (args.hasOwnProperty(a) && a !== '$0' && args[a] && args[a].length) {
 			inputValid = true;
 			break;
 		}
