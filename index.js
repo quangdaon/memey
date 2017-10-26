@@ -24,9 +24,15 @@ const args = require('yargs')
 	.alias('h', 'help')
 	.alias('v', 'version')
 	.describe('s', 'Show version number')
+	.count('debug')
+	.alias('d', 'debug')
 	.example('$0 "y no no work"', 'Creates y u no meme')
 	.epilog('Created by Quangdao Nguyen')
 	.argv;
+
+const debug = args.debug === 1 ? console.log : () => null;
+
+debug('Debugging enabled...');
 
 const savedMemes = require('./data/memes.json');
 const expressions = require('./data/expressions.json');
@@ -35,22 +41,25 @@ const npmPkg = require('./package.json');
 let config;
 
 try {
+	debug('Config Found...')
 	config = require('./data/config.json');
 } catch (e) {
+	debug('Config Not Found...')
 	config = require('./data/sample.config.json');
 }
 
 const { s: query, t: top, b: bottom } = args;
 
-if (!args._[0]) {
-	if (args.v) {
-		showVersion();
-	} else {
-		parseInput();
-	}
+if (!args._[0] && args.v) {
+	showVersion();
+} else {
+	parseInput();
 }
 
+debug(':\\')
+
 function parseInput() {
+	debug('Parsing Input...');
 	if (!config.IMGFLIP_USERNAME) return console.log('You need to log in first. Run "meme login" and provide your memeflip credentials.');
 	let inputValid = false;
 
@@ -64,11 +73,14 @@ function parseInput() {
 	if (!inputValid) return console.log('An input is required.');
 
 	if (query) {
+		debug('Expanded Input Format');
+
 		const data = search(query);
 		if (data) {
 			if (!top && !bottom) {
 				return console.log(data);
 			} else {
+				debug('Meme Found:', data.id);
 				return createMeme(data.id, top, bottom);
 			}
 		} else {
@@ -80,13 +92,15 @@ function parseInput() {
 			return savedMemes.find(meme => codify(meme.name).indexOf(codify(query)) > -1);
 		}
 	} else {
+		debug('Shorthand Input Format');
 		for (let i = 0; i < expressions.length; i++) {
 			const exp = expressions[i];
 			const regex = new RegExp(exp.regex, 'i');
 
-			const matched = args._[0].match(regex);
+			const matched = args._[0] && args._[0].match(regex);
 
 			if (matched) {
+				debug('Meme Found:', exp.id);
 				return createMeme(exp.id, matched[1], matched[2]);
 			}
 		}
@@ -95,6 +109,7 @@ function parseInput() {
 }
 
 async function createMeme(id, top, bottom) {
+	debug('Creating Meme...');
 	let API_URL = 'https://api.imgflip.com/caption_image';
 	const data = {
 		template_id: id,
@@ -112,6 +127,7 @@ async function createMeme(id, top, bottom) {
 	const response = JSON.parse(await request(options));
 
 	if (response.success) {
+	debug('Response Got!');
 		const imgUrl = response.data.url;
 		console.log(imgUrl);
 
