@@ -49,14 +49,13 @@ try {
 }
 
 const { s: query, t: top, b: bottom } = args;
-
-if (!args._[0] && args.v) {
-	showVersion();
-} else {
-	parseInput();
+if (['create', 'update', 'login', 'stats'].indexOf(args._[0]) === -1) {
+	if(args.v) {
+		showVersion();
+	} else {
+		parseInput();
+	}
 }
-
-debug(':\\')
 
 function parseInput() {
 	debug('Parsing Input...');
