@@ -8,13 +8,13 @@ Memey is a CLI meme generator using the ImgFlip API. It can be used to create me
 
 ## Installation
 
-As a command line utility, it is recommended that you install this using NPM to get the most use out of it. The instructions below that it is installed this way to provide access to the `meme` command.
+As a command line utility, it is recommended that you install this using NPM to get the most use out of it. The instructions below assume that it is installed this way to provide access to the `meme` command.
 
 ```
 npm i -g memey
 ```
 
-If you instead choose to clone this repo instead of installing it as an npm package, you can still run `npm i -g` from inside the project folder to gain access to the `meme` command. Alternatively, you can also use any of the following commands as `node index.js [params]` or `npm start [params]`.
+If you instead choose to clone this repo instead of installing it as an npm package, you can still run `npm i -g` from inside the project folder to gain access to the `meme` command. Alternatively, you can also use any of the following commands as `node index.js [args]` or `npm start [args]`.
 
 ## Usage
 
