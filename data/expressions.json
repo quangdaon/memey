@@ -82,5 +82,9 @@
     {
         "regex": "(.*) (if i had \\w+)",
         "id": 3218037
+    },
+    {
+        "regex": "((?:so )?you(?:(?:'| a)re telling| mean to tell) me .*?) (.*)",
+        "id": 19127293
     }
 ]

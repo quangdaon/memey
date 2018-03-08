@@ -22,7 +22,7 @@ When installed using NPM, Memey will add the "meme" command to the PATH, allowin
 
 In order to start using Memey, you first need to create an account on <https://imgflip.com/>. Please note that this utility is meant for personal use only and that your login credentials will be stored in a JSON file in plain text. When you first install the project, run `meme login` to proceed to the login steps.
 
-Once you have logged in, you can start using Memey to create memes. In order to do so, you must run the `meme` command and pass it three options. This generates a url that automatically gets copied to your clipboard.
+Once you have logged in, you can start using Memey to create memes. In order to do so, you must run the `meme` command and pass it three options. This generates a url that automatically gets copied to your clipbwoard.
 
 - `s` - The search query. Memey will attempt to find a meme that matches the results.
 - `t` (optional)* - The Top text.

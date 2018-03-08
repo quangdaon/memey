@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+
+const savedMemes = require('./data/memes.json');
+const expressions = require('./data/expressions.json');
+const path = require('path');
+const npmPkg = require('./package.json');
+
 const { copy } = require('copy-paste');
 const request = require('request-promise-native');
 const fs = require('fs');
@@ -34,23 +40,19 @@ const debug = args.debug === 1 ? console.log : () => null;
 
 debug('Debugging enabled...');
 
-const savedMemes = require('./data/memes.json');
-const expressions = require('./data/expressions.json');
-const path = require('path');
-const npmPkg = require('./package.json');
 let config;
 
 try {
-	debug('Config Found...')
+	debug('Config Found...');
 	config = require('./data/config.json');
 } catch (e) {
-	debug('Config Not Found...')
+	debug('Config Not Found...');
 	config = require('./data/sample.config.json');
 }
 
 const { s: query, t: top, b: bottom } = args;
 if (['create', 'update', 'login', 'stats'].indexOf(args._[0]) === -1) {
-	if(args.v) {
+	if (args.v) {
 		showVersion();
 	} else {
 		parseInput();
@@ -73,23 +75,28 @@ function parseInput() {
 
 	if (query) {
 		debug('Expanded Input Format');
+		const codify = str => str.toLowerCase().replace(/[^\w]+/gi, '-');
+		const matchesQuery = meme => codify(meme.name).indexOf(codify(query)) > -1;
 
-		const data = search(query);
+		if (!top && !bottom) {
+			const matches = savedMemes
+				.filter(matchesQuery)
+				.map(meme => `${meme.name} - ${meme.url}`);
+
+			matches.forEach(e => console.log(e));
+
+			return;
+		}
+
+		const data = savedMemes.find(matchesQuery);
+
 		if (data) {
-			if (!top && !bottom) {
-				return console.log(data);
-			} else {
-				debug('Meme Found:', data.id);
-				return createMeme(data.id, top, bottom);
-			}
+			debug('Meme Found:', data.id);
+			return createMeme(data.id, top, bottom);
 		} else {
 			console.log('No memes found.');
 		}
 
-		function search(query) {
-			const codify = str => str.toLowerCase().replace(/[^\w]+/gi, '-');
-			return savedMemes.find(meme => codify(meme.name).indexOf(codify(query)) > -1);
-		}
 	} else {
 		debug('Shorthand Input Format');
 		for (let i = 0; i < expressions.length; i++) {
@@ -126,7 +133,7 @@ async function createMeme(id, top, bottom) {
 	const response = JSON.parse(await request(options));
 
 	if (response.success) {
-	debug('Response Got!');
+		debug('Response Got!');
 		const imgUrl = response.data.url;
 		console.log(imgUrl);
 
@@ -164,7 +171,7 @@ function getStats() {
 }
 
 function showVersion() {
-	console.log(`Memey Version ${npmPkg.version}`)
+	console.log(`Memey Version ${npmPkg.version}`);
 }
 
 function login() {
@@ -185,3 +192,4 @@ function login() {
 		fs.writeFileSync(path.join(__dirname, './data/config.json'), JSON.stringify(data, null, 4), 'UTF-8');
 	});
 }
+
