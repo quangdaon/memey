@@ -5,7 +5,7 @@ const expressions = require('./data/expressions.json');
 const path = require('path');
 const npmPkg = require('./package.json');
 
-const { copy } = require('copy-paste');
+const clipboardy = require('clipboardy');
 const request = require('request-promise-native');
 const fs = require('fs');
 const opn = require('opn');
@@ -29,10 +29,10 @@ const args = require('yargs')
 	.help('h')
 	.alias('h', 'help')
 	.alias('v', 'version')
-	.describe('s', 'Show version number')
+	.describe('v', 'Show version number')
 	.count('debug')
 	.alias('d', 'debug')
-	.example('$0 "y no no work"', 'Creates y u no meme')
+	.example('$0 "y u no work"', 'Creates y u no meme')
 	.epilog('Created by Quangdao Nguyen')
 	.argv;
 
@@ -43,11 +43,11 @@ debug('Debugging enabled...');
 let config;
 
 try {
-	debug('Config Found...');
 	config = require('./data/config.json');
+	debug('Config Found...');
 } catch (e) {
-	debug('Config Not Found...');
 	config = require('./data/sample.config.json');
+	debug('Config Not Found...');
 }
 
 const { s: query, t: top, b: bottom } = args;
@@ -137,7 +137,7 @@ async function createMeme(id, top, bottom) {
 		const imgUrl = response.data.url;
 		console.log(imgUrl);
 
-		copy(imgUrl);
+		await clipboardy.write(imgUrl);
 
 		if (args.o) await opn(imgUrl);
 
