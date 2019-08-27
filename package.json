@@ -8,12 +8,12 @@
     "start": "node index"
   },
   "dependencies": {
-    "clipboardy": "^2.0.0",
-    "opn": "^5.1.0",
+    "clipboardy": "^2.1.0",
+    "opn": "^5.5.0",
     "prompt": "^1.0.0",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
-    "yargs": "^8.0.2"
+    "yargs": "^14.0.0"
   },
   "description": "A Command Line meme generator.",
   "main": "index.js",
