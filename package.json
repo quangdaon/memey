@@ -1,5 +1,6 @@
 {
   "name": "memey",
+  "title": "Memey",
   "version": "1.0.10",
   "bin": {
     "meme": "./index.js"
