@@ -25,10 +25,13 @@ In order to start using Memey, you first need to create an account on <https://i
 Once you have logged in, you can start using Memey to create memes. In order to do so, you must run the `meme` command and pass it three options. This generates a url that automatically gets copied to your clipbwoard.
 
 - `s` - The search query. Memey will attempt to find a meme that matches the results.
+- `a` (optional)* - Format any top or bottom text with aLtErNaTiNg CaSe :)
+- `o` (optional) - Open image in browser immediately after creation
+- `l` (optional) - The image will be saved locally in the `/images` folder and be opened locally immediately after creation
 - `t` (optional)* - The Top text.
 - `b` (optional)* - The Bottom text.
 
-*While the top and bottom texts are both optional, at least one _must_ be provided.
+*While the top and bottom texts are both optional, at least one _must_ be provided. Additionally, specifying the alternating case flag `a` uses imgflip's more advanced [boxes](https://api.imgflip.com/) API for text placement. Currently no x, y, width, or height parameters are passed, so imgflip attempts to fit the text to the meme as best it can.
 
 #### Example
 
@@ -47,6 +50,14 @@ meme "what if i told you this app was made out of boredom"
 ```
 
 ![](http://i.imgflip.com/1wv44a.jpg)
+
+#### Example
+
+```
+meme -as "mocking spongebob" -t "i am imgflip" -b "i have to be complicated to do alternating case text"
+```
+
+![](https://i.imgflip.com/3dr07s.jpg)
 
 ## Maintenance
 

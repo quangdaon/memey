@@ -4,12 +4,12 @@ const savedMemes = require('./data/memes.json');
 const expressions = require('./data/expressions.json');
 const path = require('path');
 const npmPkg = require('./package.json');
-
 const clipboardy = require('clipboardy');
 const request = require('request-promise-native');
 const fs = require('fs');
-const opn = require('opn');
+const open = require('open');
 const prompt = require('prompt');
+const download = require('image-downloader');
 
 const args = require('yargs')
 	.usage('Usage: $0 [<command>] [options]')
@@ -26,6 +26,15 @@ const args = require('yargs')
 	.alias('b', 'bottom')
 	.nargs('b', 1)
 	.describe('b', 'Input bottom text')
+	.alias('a', 'alternating-case')
+	.nargs('a', 1)
+	.describe('a', 'Automatically transform text to AlTeRnAtInG cAsE')
+	.alias('o', 'open')
+	.nargs('o', 1)
+	.describe('o', 'Open image in browser immediately after creation')
+	.alias('l', 'open-locally')
+	.nargs('l', 1)
+	.describe('l', 'Download and open image locally immediately after creation')
 	.help('h')
 	.alias('h', 'help')
 	.alias('v', 'version')
@@ -91,7 +100,10 @@ function parseInput() {
 		const data = savedMemes.find(matchesQuery);
 
 		if (data) {
-			debug('Meme Found:', data.id);
+			debug('Meme Found Expanded:', data.id);
+			if (args.a) {
+				return handleAlternatingCase(data.id, top, bottom);
+			}
 			return createMeme(data.id, top, bottom);
 		} else {
 			console.log('No memes found.');
@@ -106,12 +118,27 @@ function parseInput() {
 			const matched = args._[0] && args._[0].match(regex);
 
 			if (matched) {
-				debug('Meme Found:', exp.id);
+				debug('Meme Found Shorthand:', exp.id);
+				if (args.a) {
+					return handleAlternatingCase(data.id, top, bottom);
+				}
 				return createMeme(exp.id, matched[1], matched[2]);
 			}
 		}
 		console.log('Meme not found.');
 	}
+}
+
+async function handleAlternatingCase(id, top, bottom) {
+	var topAlt = '';
+	var bottomAlt = '';
+	if (top) {
+		topAlt = alternatingCase(args.t);
+	}
+	if (bottom) {
+		bottomAlt = alternatingCase(args.b);
+	}
+	return createAdvancedMeme(id, topAlt, bottomAlt) // need to use advanced 'boxes' API because text0 and text1 are always capitalized 
 }
 
 async function createMeme(id, top, bottom) {
@@ -132,20 +159,34 @@ async function createMeme(id, top, bottom) {
 
 	const response = JSON.parse(await request(options));
 
-	if (response.success) {
-		debug('Response Got!');
-		const imgUrl = response.data.url;
-		console.log(imgUrl);
+	handleResponse(response);
+}
 
-		await clipboardy.write(imgUrl);
+async function createAdvancedMeme(id, top, bottom) {
+	debug('Creating Advanced Meme...');
+	let API_URL = 'https://api.imgflip.com/caption_image';
+	const data = {
+		template_id: id,
+		username: config.IMGFLIP_USERNAME,
+		password: config.IMGFLIP_PASSWORD,
+		boxes: [
+			{
+				"text": top
+			},
+			{
+				"text": bottom
+			}
+		]
+	};
+	const options = {
+		uri: API_URL,
+		method: 'POST',
+		form: data
+	};
 
-		if (args.o) await opn(imgUrl);
+	const response = JSON.parse(await request(options));
 
-	} else {
-		console.log('Conversion Failed:', response.error_message);
-	}
-
-	process.exit(0);
+	handleResponse(response);
 }
 
 async function update() {
@@ -164,6 +205,46 @@ async function update() {
 	fs.writeFileSync(path.join(__dirname, './data/memes.json'), JSON.stringify(savedMemes.sort((a, b) => a.id - b.id), null, 4), 'UTF-8');
 	return added;
 }
+
+async function handleResponse(response) {
+	if (response.success) {
+		debug('Response Got!');
+		const imgUrl = response.data.url;
+		console.log(imgUrl);
+
+		const options = {
+			url: imgUrl,
+			dest: './images'
+		}
+
+		await clipboardy.write(imgUrl);
+
+		if (args.o) await open(imgUrl);
+
+		if (args.l) {
+			try {
+				const { filename, image } = await download.image(options);
+				console.log(filename);
+				open(filename);
+			} catch (e) {
+				console.log(e);
+			}
+		}
+
+	} else {
+		console.log('Conversion Failed:', response.error_message);
+	}
+
+	process.exit(0);
+}
+
+function alternatingCase(s) {
+	var chars = s.toLowerCase().split("");
+	for (var i = 0; i < chars.length; i += 2) {
+		chars[i] = chars[i].toUpperCase();
+	}
+	return chars.join("");
+};
 
 function getStats() {
 	console.log('Saved Memes:', savedMemes.length);
@@ -192,4 +273,3 @@ function login() {
 		fs.writeFileSync(path.join(__dirname, './data/config.json'), JSON.stringify(data, null, 4), 'UTF-8');
 	});
 }
-

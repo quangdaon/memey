@@ -1,0 +1,4 @@
+# ignore any images generated in this folder, but not the folder itself
+*
+*/
+!.gitignore
